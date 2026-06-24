@@ -5,20 +5,18 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from datetime import datetime, timedelta
 
-# -----------------------------
+
 # Page Configuration
-# -----------------------------
+
 st.set_page_config(
     page_title="Real-Time Stock Dashboard",
-    page_icon="📈",
     layout="wide"
 )
 
-st.title("📈 Real-Time Stock Market Dashboard")
+st.title("Real-Time Stock Market Dashboard")
 
-# -----------------------------
 # Sidebar
-# -----------------------------
+
 st.sidebar.header("Dashboard Settings")
 
 stocks = [
@@ -43,9 +41,8 @@ refresh_rate = st.sidebar.slider(
     30
 )
 
-# -----------------------------
 # Fetch Data
-# -----------------------------
+
 @st.cache_data(ttl=60)
 def load_data(ticker, period):
     stock = yf.Ticker(ticker)
@@ -61,15 +58,15 @@ if df.empty:
 if len(df) < 1:
     st.error("Insufficient stock data.")
     st.stop()
-# -----------------------------
+
 # Moving Averages
-# -----------------------------
+
 df["MA20"] = df["Close"].rolling(20).mean()
 df["MA50"] = df["Close"].rolling(50).mean()
 
-# -----------------------------
+
 # Metrics
-# -----------------------------
+
 latest_close = df["Close"].iloc[-1]
 
 if len(df) > 1:
@@ -104,9 +101,8 @@ col4.metric(
     round(info.get("trailingPE", 0), 2)
 )
 
-# -----------------------------
 # Candlestick Chart
-# -----------------------------
+
 fig = make_subplots(
     rows=2,
     cols=1,
@@ -168,9 +164,8 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# -----------------------------
 # Company Information
-# -----------------------------
+
 st.subheader("Company Information")
 
 company_data = {
@@ -184,9 +179,9 @@ company_data = {
 st.table(pd.DataFrame(company_data.items(),
                       columns=["Field", "Value"]))
 
-# -----------------------------
+
 # Historical Data Table
-# -----------------------------
+
 st.subheader("Historical Data")
 
 display_df = df.reset_index()
@@ -197,9 +192,9 @@ st.dataframe(
     use_container_width=True
 )
 
-# -----------------------------
+
 # Auto Refresh
-# -----------------------------
+
 st.caption(
     f"Dashboard refreshes every {refresh_rate} seconds"
 )
